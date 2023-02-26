@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
+
+body { margin: 0; }
+pre { font: 16px 'Fira Mono', monospace; line-height: 1.5; margin: 0; padding: 2rem }
+pre { background-color: #f9fef5; color: #181a19; }
+
+pre .comment { color: #94b996; font-style: italic; }
+pre .keyword,
+pre .string,
+pre .number,
+pre .nil,
+pre .boolean { color: #8e9144; }
+pre .symbol.special-symbol,
+pre .symbol.macro-symbol,
+pre .symbol.global-symbol { color: #448f22; font-weight: bold; }
