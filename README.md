@@ -6,7 +6,7 @@ Syntax highlighting for [Fennel](https://fennel-lang.org/)
 What now?
 ---
 
-[Have a look!](https://firoxer.github.io/fennel-highlight/example.html)
+[Have a look!](https://firoxer.github.io/fennel-highlight/example.html) This is all generated from `sample.fnl` with `highlight.fnl` with some `fennel.css` slapped on top of it.
 
 Usage
 ---
