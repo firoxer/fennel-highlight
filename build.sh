@@ -10,4 +10,4 @@ fennel/fennel --compile highlight.fnl >highlight.lua
 echo "<style>" >example.html
 cat fennel.css >>example.html
 echo "</style><pre>" >>example.html
-fennel/fennel highlight-cli.fnl sample.fnl >>example.html
+fennel/fennel highlight-cli.fnl highlight.fnl >>example.html
