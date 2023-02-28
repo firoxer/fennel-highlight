@@ -31,7 +31,8 @@
 
   (while (not (at-eof?))
     (or (attempt-match :comment "^(;[^\n]*[\n])")
-        (attempt-match :string "^(\"[^\"]*\")")
+        (attempt-match :string "^(\"\")")
+        (attempt-match :string "^(\".-[^\\]\")")
         (attempt-match :keyword (.. "^(:[" symbol-char "]+)"))
         (attempt-match :number "^([%+%-]?%d+[xX]?%d*%.?%d?)")
         (attempt-match :nil (.. "^(nil)[^" symbol-char "]"))

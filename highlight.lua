@@ -35,7 +35,7 @@ local function scan(text)
   end
   local symbol_char = "!%$&#%*%+%-%./:<=>%?%^_%w"
   while not at_eof_3f() do
-    do local _ = (attempt_match("comment", "^(;[^\n]*[\n])") or attempt_match("string", "^(\"[^\"]*\")") or attempt_match("keyword", ("^(:[" .. symbol_char .. "]+)")) or attempt_match("number", "^([%+%-]?%d+[xX]?%d*%.?%d?)") or attempt_match("nil", ("^(nil)[^" .. symbol_char .. "]")) or attempt_match("boolean", ("^(true)[^" .. symbol_char .. "]")) or attempt_match("boolean", ("^(false)[^" .. symbol_char .. "]")) or attempt_match("symbol", ("^([" .. symbol_char .. "]+)")) or attempt_match("bracket", "^([%(%)%[%]{}])") or increment_current_index()) end
+    do local _ = (attempt_match("comment", "^(;[^\n]*[\n])") or attempt_match("string", "^(\"\")") or attempt_match("string", "^(\".-[^\\]\")") or attempt_match("keyword", ("^(:[" .. symbol_char .. "]+)")) or attempt_match("number", "^([%+%-]?%d+[xX]?%d*%.?%d?)") or attempt_match("nil", ("^(nil)[^" .. symbol_char .. "]")) or attempt_match("boolean", ("^(true)[^" .. symbol_char .. "]")) or attempt_match("boolean", ("^(false)[^" .. symbol_char .. "]")) or attempt_match("symbol", ("^([" .. symbol_char .. "]+)")) or attempt_match("bracket", "^([%(%)%[%]{}])") or increment_current_index()) end
   end
   return yield_buffered_nonmatching()
 end
