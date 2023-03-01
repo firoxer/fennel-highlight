@@ -1,68 +1,68 @@
-(fn scan [text]
+(fn scan [source rules]
   (var current-index 1)
   (var last-matching-at 0)
 
-  (local text-length (string.len text))
   (fn at-eof? []
-    (> current-index text-length))
+    (> current-index (string.len source)))
 
-  (fn yield-buffered-nonmatching []
-    (when (< 0 (- current-index last-matching-at))
-      (coroutine.yield {:kind nil
-                        :value (string.sub text
-                                           (+ last-matching-at 1)
-                                           (- current-index 1))})))
+  (fn advance [n]
+    (set current-index (+ current-index n)))
 
-  (fn yield [kind matched]
-    (yield-buffered-nonmatching)
-    (coroutine.yield {:kind kind :value matched})
-    (set current-index (+ current-index (string.len matched)))
+  (fn yield-nonmatching []
+    (if (< 0 (- current-index last-matching-at))
+        (let [nonmatching (string.sub source
+                                      (+ last-matching-at 1)
+                                      (- current-index 1))]
+          (coroutine.yield :nonmatching nonmatching))))
+
+  (fn yield-and-advance [class matched]
+    (yield-nonmatching)
+    (coroutine.yield class matched)
+    (advance (string.len matched))
     (set last-matching-at (- current-index 1)))
 
-  (fn attempt-match [kind pattern]
-    (case (string.match text pattern current-index)
-      matched (do (yield kind matched)
-                  true))) ; To signal success
-
-  (fn increment-current-index []
-    (set current-index (+ current-index 1)))
-
-  (local symbol-char "!%$&#%*%+%-%./:<=>%?%^_%w")
+  (fn test-rules [rules]
+    (accumulate [matching-rule nil
+                 _ [class pattern] (ipairs rules)
+                 &until matching-rule]
+      (case (string.match source pattern current-index)
+        str [class str])))
 
   (while (not (at-eof?))
-    (or (attempt-match :comment "^(;[^\n]*[\n])")
-        (attempt-match :string "^(\"\")")
-        (attempt-match :string "^(\".-[^\\]\")")
-        (attempt-match :keyword (.. "^(:[" symbol-char "]+)"))
-        (attempt-match :number "^([%+%-]?%d+[xX]?%d*%.?%d?)")
-        (attempt-match :nil (.. "^(nil)[^" symbol-char "]"))
-        (attempt-match :boolean (.. "^(true)[^" symbol-char "]"))
-        (attempt-match :boolean (.. "^(false)[^" symbol-char "]"))
-        (attempt-match :symbol (.. "^([" symbol-char "]+)"))
-        (attempt-match :bracket "^([%(%)%[%]{}])")
-        (increment-current-index)))
-  (yield-buffered-nonmatching))
+    (case (test-rules rules)
+      [class str] (yield-and-advance class str)
+      _ (advance 1)))
+  (yield-nonmatching)) ; To release any final characters
 
-(fn with-symbol-subkind [syntax {&as token : kind : value}]
-  (when (= :symbol kind)
-    (set token.subkind (case (. syntax value)
-                         {:special? true} :special-symbol
-                         {:macro? true} :macro-symbol
-                         {:global? true} :global-symbol)))
-  token)
+(fn token->html [class value]
+  (let [escaped-value (-> value
+                        (string.gsub "&" "&amp;")
+                        (string.gsub "<" "&lt;"))]
+    (string.format "<span class=\"%s\">%s</span>" class escaped-value)))
 
-(fn token->html [{: kind : subkind : value}]
-  (let [class (.. (or kind "nonmatching") " " (or subkind ""))
-        escaped-value (-> value
-                          (string.gsub "&" "&amp;")
-                          (string.gsub "<" "&lt;"))]
-    (.. "<span class=\"" class "\">" escaped-value "</span>")))
+(local fennel-rules
+  (let [symbol-char "!%$&#%*%+%-%./:<=>%?%^_%w"]
+    [[:comment "^(;[^\n]*[\n])"]
+     [:string "^(\"\")"]
+     [:string "^(\".-[^\\]\")"]
+     [:keyword (.. "^(:[" symbol-char "]+)")]
+     [:number "^([%+%-]?%d+[xX]?%d*%.?%d?)"]
+     [:nil (.. "^(nil)[^" symbol-char "]")]
+     [:boolean (.. "^(true)[^" symbol-char "]")]
+     [:boolean (.. "^(false)[^" symbol-char "]")]
+     [:symbol (.. "^([" symbol-char "]+)")]
+     [:bracket "^([%(%)%[%]{}])"]]))
 
-(fn for-html [syntax code]
-  (let [tokens (icollect [token (coroutine.wrap #(scan (.. code "\n")))]
-                 (->> token
-                      (with-symbol-subkind syntax)
-                      token->html))]
-    (table.concat tokens)))
+(fn fennel->html [syntax source]
+  (icollect [class value (coroutine.wrap #(scan source fennel-rules))]
+    (let [extra (case (. syntax value)
+                  {:special? true} :special
+                  {:macro? true} :macro
+                  {:global? true} :global)
+          class* (if extra
+                   (.. class " " extra)
+                   class)]
+      (token->html class* value))))
 
-{: for-html :for_html for-html}
+{: fennel->html
+ :fennel_to_html fennel->html}

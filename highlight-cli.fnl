@@ -9,5 +9,6 @@
 
 (let [source-file (io.open filename :rb)
       source (source-file:read :*all)
-      highlighted (highlight.for-html (fennel.syntax) source)]
-  (print highlighted))
+      highlighted (highlight.fennel->html (fennel.syntax) source)]
+  (each [_ html (ipairs highlighted)]
+    (: io.stdout :write html)))
