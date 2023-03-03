@@ -12,4 +12,5 @@ pre .nil,
 pre .boolean { color: #8e9144; }
 pre .symbol.special,
 pre .symbol.macro,
-pre .symbol.global { color: #448f22; font-weight: bold; }
+pre .symbol.global { color: #448f22 }
+pre .symbol.special { font-weight: bold; }

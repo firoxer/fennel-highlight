@@ -110,7 +110,7 @@ local function fennel_syntax__3elua_syntax(fennel_syntax)
     local tbl_14_auto = lua_syntax
     for k, v in pairs(fennel_syntax) do
       local k_15_auto, v_16_auto = nil, nil
-      if v["global?"] then
+      if (v["global?"] or v["special?"]) then
         k_15_auto, v_16_auto = k, v
       else
         k_15_auto, v_16_auto = nil

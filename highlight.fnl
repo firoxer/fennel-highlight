@@ -71,7 +71,8 @@
 (fn fennel-syntax->lua-syntax [fennel-syntax]
   (local lua-syntax {})
   (collect [k v (pairs fennel-syntax) &into lua-syntax]
-    (if v.global? (values k v)))
+    (if (or v.global? v.special?)
+        (values k v)))
   (collect [_ k (ipairs lua-keywords) &into lua-syntax]
     (values k {:special? true}))
   lua-syntax)
