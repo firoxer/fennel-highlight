@@ -1,6 +1,6 @@
 (fn scan [source rules]
   (var current-index 1)
-  (var last-matching-at 0)
+  (var last-matching-at -1)
 
   (fn at-eof? []
     (> current-index (string.len source)))
@@ -9,7 +9,7 @@
     (set current-index (+ current-index n)))
 
   (fn yield-nonmatching []
-    (if (< 0 (- current-index last-matching-at))
+    (if (> current-index (+ 1 last-matching-at))
         (let [nonmatching (string.sub source
                                       (+ last-matching-at 1)
                                       (- current-index 1))]

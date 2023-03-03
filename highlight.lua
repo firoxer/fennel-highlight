@@ -1,6 +1,6 @@
 local function scan(source, rules)
   local current_index = 1
-  local last_matching_at = 0
+  local last_matching_at = -1
   local function at_eof_3f()
     return (current_index > string.len(source))
   end
@@ -9,7 +9,7 @@ local function scan(source, rules)
     return nil
   end
   local function yield_nonmatching()
-    if (0 < (current_index - last_matching_at)) then
+    if (current_index > (1 + last_matching_at)) then
       local nonmatching = string.sub(source, (last_matching_at + 1), (current_index - 1))
       return coroutine.yield("nonmatching", nonmatching)
     else
