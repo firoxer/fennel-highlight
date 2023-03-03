@@ -79,17 +79,34 @@
 
 (local lua-rules
   (let [symbol-char-first "a-zA-Z_"
-        symbol-char-rest (.. symbol-char-first "0-9")]
-    [[:comment "^(%-%-[^\n]*[\n])"]
+        symbol-char-rest (.. symbol-char-first "0-9%.")]
+    [[:comment "^(%-%-%[===%[.-]===])"]
+     [:comment "^(%-%-%[==%[.-]==])"]
+     [:comment "^(%-%-%[=%[.-]=])"]
+     [:comment "^(%-%-%[%[.-]])"]
+     [:comment "^(%-%-[^\n]*[\n])"]
      [:string "^(\"\")"]
+     [:string "^(%[%[.-]])"]
      [:string "^(\".-[^\\]\")"]
-     ; TODO: Multiline string
-     [:number "^([%+%-]?%d+[xX]?%d*%.?%d?)"]
-     ; TODO: More number handling
+     [:string "^('.-[^\\]')"]
+     [:number "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+[eE][+-]?[0-9]?)"]
+     [:number "^(0[xX][0-9a-fA-F]+[eE][+-]?[0-9]?)"]
+     [:number "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+)"]
+     [:number "^(0[xX][0-9a-fA-F]+)"]
+     [:number "^([0-9]?%.[0-9]+[eE][+-]?[0-9]?)"]
+     [:number "^([0-9]+[eE][+-]?[0-9]?)"]
+     [:number "^([0-9]?%.[0-9]+)"]
+     [:number "^([0-9]+)"]
      [:nil (.. "^(nil)[^" symbol-char-rest "]")]
      [:boolean (.. "^(true)[^" symbol-char-rest "]")]
      [:boolean (.. "^(false)[^" symbol-char-rest "]")]
      [:symbol (.. "^([" symbol-char-first "][" symbol-char-rest "]*)")]
+     [:symbol "^(<=)"]
+     [:symbol "^(>=)"]
+     [:symbol "^(==)"]
+     [:symbol "^(~=)"]
+     [:symbol "^(%.%.)"]
+     [:symbol "^([%+%-%*/%^<>=#])"]
      [:bracket "^([%(%)%[%]{}])"]]))
 
 (fn lua->html [syntax source]

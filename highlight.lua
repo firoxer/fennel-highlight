@@ -136,8 +136,8 @@ end
 local lua_rules
 do
   local symbol_char_first = "a-zA-Z_"
-  local symbol_char_rest = (symbol_char_first .. "0-9")
-  lua_rules = {{"comment", "^(%-%-[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(\".-[^\\]\")"}, {"number", "^([%+%-]?%d+[xX]?%d*%.?%d?)"}, {"nil", ("^(nil)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(true)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(false)[^" .. symbol_char_rest .. "]")}, {"symbol", ("^([" .. symbol_char_first .. "][" .. symbol_char_rest .. "]*)")}, {"bracket", "^([%(%)%[%]{}])"}}
+  local symbol_char_rest = (symbol_char_first .. "0-9%.")
+  lua_rules = {{"comment", "^(%-%-%[===%[.-]===])"}, {"comment", "^(%-%-%[==%[.-]==])"}, {"comment", "^(%-%-%[=%[.-]=])"}, {"comment", "^(%-%-%[%[.-]])"}, {"comment", "^(%-%-[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(%[%[.-]])"}, {"string", "^(\".-[^\\]\")"}, {"string", "^('.-[^\\]')"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+)"}, {"number", "^(0[xX][0-9a-fA-F]+)"}, {"number", "^([0-9]?%.[0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]?%.[0-9]+)"}, {"number", "^([0-9]+)"}, {"nil", ("^(nil)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(true)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(false)[^" .. symbol_char_rest .. "]")}, {"symbol", ("^([" .. symbol_char_first .. "][" .. symbol_char_rest .. "]*)")}, {"symbol", "^(<=)"}, {"symbol", "^(>=)"}, {"symbol", "^(==)"}, {"symbol", "^(~=)"}, {"symbol", "^(%.%.)"}, {"symbol", "^([%+%-%*/%^<>=#])"}, {"bracket", "^([%(%)%[%]{}])"}}
 end
 local function lua__3ehtml(syntax, source)
   return __3ehtml(fennel_syntax__3elua_syntax(syntax), lua_rules, source)
