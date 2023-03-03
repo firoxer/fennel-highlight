@@ -1,4 +1,4 @@
-(local highlight (require :highlight))
+(local highlight (require :init))
 (local fennel (require :fennel.fennel))
 
 (fn usage []

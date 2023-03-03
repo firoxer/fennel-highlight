@@ -5,11 +5,11 @@ cd fennel
 make
 cd ..
 
-fennel/fennel --compile highlight.fnl >highlight.lua
+fennel/fennel --compile init.fnl >init.lua
 
 echo "<style>" >example.html
 cat fennel.css >>example.html
 echo "</style><pre>" >>example.html
-fennel/fennel highlight-cli.fnl highlight.fnl >>example.html
+fennel/fennel cli.fnl init.fnl >>example.html
 echo "" >>example.html
-fennel/fennel highlight-cli.fnl --from-lua highlight.lua >>example.html
+fennel/fennel cli.fnl --from-lua init.lua >>example.html
