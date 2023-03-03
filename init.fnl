@@ -60,7 +60,8 @@
      [:boolean (.. "^(true)[^" symbol-char "]")]
      [:boolean (.. "^(false)[^" symbol-char "]")]
      [:symbol (.. "^([" symbol-char "]+)")]
-     [:bracket "^([%(%)%[%]{}])"]]))
+     [:bracket "^([%(%)%[%]{}])"]
+     [:whitespace "^([ \n\t]+)"]]))
 
 (fn fennel->html [syntax source]
   (->html syntax fennel-rules source))
@@ -107,7 +108,8 @@
      [:symbol "^(~=)"]
      [:symbol "^(%.%.)"]
      [:symbol "^([%+%-%*/%^<>=#])"]
-     [:bracket "^([%(%)%[%]{}])"]]))
+     [:bracket "^([%(%)%[%]{}])"]
+     [:whitespace "^([ \n\t]+)"]]))
 
 (fn lua->html [syntax source]
   (->html (fennel-syntax->lua-syntax syntax)
