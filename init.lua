@@ -1,6 +1,6 @@
 local function scan(source, rules)
   local current_index = 1
-  local last_matching_at = -1
+  local last_matching_at = 0
   local function at_eof_3f()
     return (current_index > string.len(source))
   end

@@ -1,6 +1,6 @@
 (fn scan [source rules]
   (var current-index 1)
-  (var last-matching-at -1)
+  (var last-matching-at 0)
 
   (fn at-eof? []
     (> current-index (string.len source)))
