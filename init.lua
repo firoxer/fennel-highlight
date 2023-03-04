@@ -62,7 +62,9 @@ local function __3ehtml(syntax, rules, source)
   end
   for class, value in coroutine.wrap(_8_) do
     local val_19_auto
-    do
+    if ("nonmatching" == class) then
+      val_19_auto = value
+    else
       local extra
       if ("symbol" == class) then
         local _9_ = syntax[value]
@@ -98,7 +100,7 @@ end
 local fennel_rules
 do
   local symbol_char = "!%$&#%*%+%-%./:<=>%?%^_a-zA-Z0-9"
-  fennel_rules = {{"comment", "^(;[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(\".-[^\\]\")"}, {"keyword", ("^(:[" .. symbol_char .. "]+)")}, {"number", "^([%+%-]?%d+[xX]?%d*%.?%d?)"}, {"nil", ("^(nil)[^" .. symbol_char .. "]")}, {"boolean", ("^(true)[^" .. symbol_char .. "]")}, {"boolean", ("^(false)[^" .. symbol_char .. "]")}, {"symbol", ("^([" .. symbol_char .. "]+)")}, {"bracket", "^([%(%)%[%]{}])"}, {"whitespace", "^([ \n\9]+)"}}
+  fennel_rules = {{"comment", "^(;[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(\".-[^\\]\")"}, {"keyword", ("^(:[" .. symbol_char .. "]+)")}, {"number", "^([%+%-]?%d+[xX]?%d*%.?%d?)"}, {"nil", ("^(nil)[^" .. symbol_char .. "]")}, {"boolean", ("^(true)[^" .. symbol_char .. "]")}, {"boolean", ("^(false)[^" .. symbol_char .. "]")}, {"symbol", ("^([" .. symbol_char .. "]+)")}}
 end
 local function fennel__3ehtml(syntax, source)
   return __3ehtml(syntax, fennel_rules, source)
@@ -137,7 +139,7 @@ local lua_rules
 do
   local symbol_char_first = "a-zA-Z_"
   local symbol_char_rest = (symbol_char_first .. "0-9%.")
-  lua_rules = {{"comment", "^(%-%-%[===%[.-]===])"}, {"comment", "^(%-%-%[==%[.-]==])"}, {"comment", "^(%-%-%[=%[.-]=])"}, {"comment", "^(%-%-%[%[.-]])"}, {"comment", "^(%-%-[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(%[%[.-]])"}, {"string", "^(\".-[^\\]\")"}, {"string", "^('.-[^\\]')"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+)"}, {"number", "^(0[xX][0-9a-fA-F]+)"}, {"number", "^([0-9]?%.[0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]?%.[0-9]+)"}, {"number", "^([0-9]+)"}, {"nil", ("^(nil)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(true)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(false)[^" .. symbol_char_rest .. "]")}, {"symbol", ("^([" .. symbol_char_first .. "][" .. symbol_char_rest .. "]*)")}, {"symbol", "^(<=)"}, {"symbol", "^(>=)"}, {"symbol", "^(==)"}, {"symbol", "^(~=)"}, {"symbol", "^(%.%.)"}, {"symbol", "^([%+%-%*/%^<>=#])"}, {"bracket", "^([%(%)%[%]{}])"}, {"whitespace", "^([ \n\9]+)"}}
+  lua_rules = {{"comment", "^(%-%-%[===%[.-]===])"}, {"comment", "^(%-%-%[==%[.-]==])"}, {"comment", "^(%-%-%[=%[.-]=])"}, {"comment", "^(%-%-%[%[.-]])"}, {"comment", "^(%-%-[^\n]*[\n])"}, {"string", "^(\"\")"}, {"string", "^(%[%[.-]])"}, {"string", "^(\".-[^\\]\")"}, {"string", "^('.-[^\\]')"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]+[eE][+-]?[0-9]?)"}, {"number", "^(0[xX][0-9a-fA-F]?%.[0-9a-fA-F]+)"}, {"number", "^(0[xX][0-9a-fA-F]+)"}, {"number", "^([0-9]?%.[0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]+[eE][+-]?[0-9]?)"}, {"number", "^([0-9]?%.[0-9]+)"}, {"number", "^([0-9]+)"}, {"nil", ("^(nil)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(true)[^" .. symbol_char_rest .. "]")}, {"boolean", ("^(false)[^" .. symbol_char_rest .. "]")}, {"symbol", ("^([" .. symbol_char_first .. "][" .. symbol_char_rest .. "]*)")}, {"symbol", "^(<=)"}, {"symbol", "^(>=)"}, {"symbol", "^(==)"}, {"symbol", "^(~=)"}, {"symbol", "^(%.%.)"}, {"symbol", "^([%+%-%*/%^<>=#])"}}
 end
 local function lua__3ehtml(syntax, source)
   return __3ehtml(fennel_syntax__3elua_syntax(syntax), lua_rules, source)

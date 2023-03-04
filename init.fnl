@@ -36,18 +36,20 @@
 
 (fn ->html [syntax rules source]
   (icollect [class value (coroutine.wrap #(scan source rules))]
-    (let [extra (if (= :symbol class)
-                    (case (. syntax value)
-                      {:special? true} :special
-                      {:macro? true} :macro
-                      {:global? true} :global))
-          extended-class (if extra
-                             (.. class " " extra)
-                             class)
-          escaped-value (-> value
-                        (string.gsub "&" "&amp;")
-                        (string.gsub "<" "&lt;"))]
-      (string.format "<span class=\"%s\">%s</span>" extended-class escaped-value))))
+    (if (= :nonmatching class)
+        value
+        (let [extra (if (= :symbol class)
+                        (case (. syntax value)
+                          {:special? true} :special
+                          {:macro? true} :macro
+                          {:global? true} :global))
+              extended-class (if extra
+                                 (.. class " " extra)
+                                 class)
+              escaped-value (-> value
+                            (string.gsub "&" "&amp;")
+                            (string.gsub "<" "&lt;"))]
+          (string.format "<span class=\"%s\">%s</span>" extended-class escaped-value)))))
 
 (local fennel-rules
   (let [symbol-char "!%$&#%*%+%-%./:<=>%?%^_a-zA-Z0-9"]
@@ -59,9 +61,9 @@
      [:nil (.. "^(nil)[^" symbol-char "]")]
      [:boolean (.. "^(true)[^" symbol-char "]")]
      [:boolean (.. "^(false)[^" symbol-char "]")]
-     [:symbol (.. "^([" symbol-char "]+)")]
-     [:bracket "^([%(%)%[%]{}])"]
-     [:whitespace "^([ \n\t]+)"]]))
+     [:symbol (.. "^([" symbol-char "]+)")]]))
+     ;[:bracket "^([%(%)%[%]{}])"] ; Too noisy for regular use
+     ;[:whitespace "^([ \n\t]+)"]
 
 (fn fennel->html [syntax source]
   (->html syntax fennel-rules source))
@@ -107,9 +109,9 @@
      [:symbol "^(==)"]
      [:symbol "^(~=)"]
      [:symbol "^(%.%.)"]
-     [:symbol "^([%+%-%*/%^<>=#])"]
-     [:bracket "^([%(%)%[%]{}])"]
-     [:whitespace "^([ \n\t]+)"]]))
+     [:symbol "^([%+%-%*/%^<>=#])"]]))
+     ;[:bracket "^([%(%)%[%]{}])"] ; Too noisy for regular use
+     ;[:whitespace "^([ \n\t]+)"]
 
 (fn lua->html [syntax source]
   (->html (fennel-syntax->lua-syntax syntax)
